@@ -2,10 +2,12 @@ var net = require('net');
 var fs = require('fs');
 var colors = require('colors');
 
+var router = require('./router.js');
 var controller = require('./controller.js');
+
 var server = net.createServer();
 
-var todos = JSON.parse( fs.readFileSync('./data.json') );
+var todos = JSON.parse( fs.readFileSync('./lib/data.json') );
 
 server.on('connection', function(client) { 
   console.log('client connected');
@@ -14,31 +16,8 @@ server.on('connection', function(client) {
 
   client.setEncoding('utf8');
 
-  client.on('data', function(stringFromClient) {
-    
-    var clientRequestArray = stringFromClient.split(" ")
-
-    switch ( clientRequestArray[0].trim() ) {
-      case 'add':
-        controller.add(client, clientRequestArray, todos);
-        break;
-
-      case 'completed':
-        controller.completed(client, clientRequestArray, todos);
-        break;
-
-      case 'list':
-        controller.list(client, todos);
-        break;
-
-      case 'help':
-        controller.help(client);
-        break;
-
-      default:
-        controller.default(client);
-    }
-
+  client.on('data', function(stringFromClient){
+   router(stringFromClient, client, controller, todos); 
   });
 });
 

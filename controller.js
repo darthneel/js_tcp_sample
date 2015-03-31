@@ -15,7 +15,7 @@ var controller = {
       completed: false
     });
 
-    fs.writeFile('./data.json', JSON.stringify(todos), function(err){
+    fs.writeFile('./lib/data.json', JSON.stringify(todos), function(err){
       if (err) { console.log(err) }
     });
 
@@ -36,7 +36,7 @@ var controller = {
       }
     });
 
-    fs.writeFile('./data.json', JSON.stringify(todos), function(err){
+    fs.writeFile('./lib/data.json', JSON.stringify(todos), function(err){
       if (err) { console.log(err) }
     });
 
