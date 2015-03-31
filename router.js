@@ -1,4 +1,6 @@
-var router = function(stringFromClient, client, controller, todos) {
+var controller = require('./controller.js')
+
+var router = function(stringFromClient, client, todos) {
   
   var clientRequestArray = stringFromClient.split(" ")
 

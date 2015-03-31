@@ -3,8 +3,6 @@ var fs = require('fs');
 var colors = require('colors');
 
 var router = require('./router.js');
-var controller = require('./controller.js');
-
 var server = net.createServer();
 
 var todos = JSON.parse( fs.readFileSync('./lib/data.json') );
@@ -17,7 +15,7 @@ server.on('connection', function(client) {
   client.setEncoding('utf8');
 
   client.on('data', function(stringFromClient){
-   router(stringFromClient, client, controller, todos); 
+   router(stringFromClient, client, todos); 
   });
 });
 
