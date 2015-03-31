@@ -2,6 +2,7 @@ var net = require('net');
 var fs = require('fs');
 var colors = require('colors');
 
+var controller = require('./controller.js');
 var server = net.createServer();
 
 var todos = JSON.parse( fs.readFileSync('./data.json') );
@@ -19,65 +20,19 @@ server.on('connection', function(client) {
 
     switch ( clientRequestArray[0].trim() ) {
       case 'add':
-        var taskToAdd = clientRequestArray[1];
-
-        if (!taskToAdd) {
-          client.write("'add' requires a second paramter.\n Type 'help' for usage instructions.\n ");
-          client.end();
-        }
-
-        todos.push({
-          task: clientRequestArray[1].trim(),
-          completed: false
-        });
-
-        fs.writeFile('./data.json', JSON.stringify(todos), function(err){
-          if (err) { console.log(err) }
-        });
-
-        client.write( colors.green("Task added!\n") );
-        client.end();
+        controller.add(client, clientRequestArray, todos);
         break;
 
       case 'completed':
-        var completedTask = clientRequestArray[1].trim();
-
-        if (!completedTask) {
-          client.write("'add' requires a second paramter.\n Type 'help' for usage instructions.\n ");
-          client.end();
-        }
-
-        todos.forEach(function(todo){
-          if (todo.task === completedTask) {
-            todo.completed = true;
-          }
-        });
-
-        fs.writeFile('./data.json', JSON.stringify(todos), function(err){
-          if (err) { console.log(err) }
-        });
-
-        client.write( colors.green("Task status updated\n") );
-        client.end();
+        controller.completed(client, clientRequestArray, todos);
         break;
 
       case 'list':
-        client.write( colors.cyan.bold.underline("All ToDo Items:\n") );
-        todos.forEach(function(todo){
-          if (todo.completed === false) {
-            client.write( colors.green( todo.task + ": incomplete \n") );
-          } else {
-            client.write( colors.strikethrough.red( todo.task + ": complete \n")  );
-          }
-        })
-        client.end();
+        controller.list(client, todos);
         break;
 
       case 'help':
-        client.write( colors.red.bold.underline("Usage Commands:\n") );
-        client.write( colors.green("add [ToDo] - add a new ToDo\n") );
-        client.write( colors.green("completed [ToDo] - mark a ToDo as complete\n") );
-        client.write( colors.green("list - see all ToDo items\n") );
+        controller.help(client);
         break;
 
       default:
