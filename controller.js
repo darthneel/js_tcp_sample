@@ -60,6 +60,12 @@ var controller = {
     client.write( colors.green("completed [ToDo] - mark a ToDo as complete\n") );
     client.write( colors.green("list - see all ToDo items\n") );
     client.end()
+  },
+  default: function (client) {
+    console.log( colors.rainbow("Unknown action attempted by client\n") ); 
+    client.write( colors.red("Action not supported\n") );
+    client.write( colors.red("Type 'help' to see all supported commands\n") );
+    client.end();
   }
 };
 

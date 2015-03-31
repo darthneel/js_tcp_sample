@@ -36,10 +36,7 @@ server.on('connection', function(client) {
         break;
 
       default:
-        console.log( colors.rainbow("Unknown action attempted by client") ); 
-        client.write( colors.red("Action not supported") );
-        client.write( colors.red("Type 'help' to see all supported commands") );
-        client.end();
+        controller.default(client);
     }
 
   });
